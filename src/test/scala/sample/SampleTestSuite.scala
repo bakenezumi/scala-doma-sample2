@@ -1,7 +1,7 @@
 package sample
 
 import org.scalatest.FunSuite
-import SampleApp._
+import SampleApp2._
 
 class SampleTestSuite extends FunSuite with org.scalatest.BeforeAndAfterAll {
 
