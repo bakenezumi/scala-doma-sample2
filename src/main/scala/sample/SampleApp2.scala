@@ -4,27 +4,25 @@ import java.util.Optional
 import org.seasar.doma.jdbc.Result
 
 object SampleApp2 extends App {
-  lazy val dao: EmpDao = new EmpDaoImpl(AppConfig)
-  lazy val tx = AppConfig.getTransactionManager
-  lazy val NOT_ASSIGNED_EMP_ID = ID[Emp](-1)
-  lazy val INITIAL_VERSION = -1
+  private lazy val dao: EmpDao = new EmpDaoImpl(AppConfig)
 
-  tx.required({ () =>
+  AppConfig.getTransactionManager.required({ () =>
     dao.create() // create table
-    Seq(
-      Emp(NOT_ASSIGNED_EMP_ID, "scott", 10, INITIAL_VERSION),
-      Emp(NOT_ASSIGNED_EMP_ID, "allen", 20, INITIAL_VERSION)
+    val inserted = Seq(
+      Emp(ID[Emp](-1), "scott", 10, -1),
+      Emp(ID[Emp](-1), "allen", 20, -1)
     ).map {
       dao.insert
     }
+    println(inserted)
     // idが2のEmpのageを +1
-    val updated: Optional[Result[Emp]] = // JavaのOptionalを利用する場合型推論が効かないので明示する
+    val updated: Optional[Result[Emp]] = // Optionalは型推論効かない
       dao
-        .selectById(ID(2)) // 検索して
+        .selectById(ID(2))
         .map { emp =>
-          dao.update(emp.growOld) // 見つかった場合には年齢を＋１して更新
+          dao.update(emp.growOld)
         }
-    println(updated) // => Optional[Result(entity=Emp(ID(2),allen,21,2), count=1)]
+    println(updated)
     val list = dao.selectAll
     list.forEach(println)
   // =>
