@@ -17,10 +17,10 @@ lazy val repository = project.settings(
     version      := "0.1.0-SNAPSHOT"
   )),
   name := "scala-doma-sample2-repository",
-  libraryDependencies += scalaTest % Test,
   libraryDependencies ++= Seq(
     "org.seasar.doma" % "doma" % "2.19.0",
-    "com.h2database" % "h2" % "1.4.193"
+    "com.h2database" % "h2" % "1.4.193",
+    scalaTest % Test
   ),
   // for Doma annotation processor
   processAnnotationsSettings
